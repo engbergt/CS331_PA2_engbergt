@@ -18,7 +18,7 @@ using std::vector;
 /* Start: Tarren's functions */
 
 
-bool terminal(state) { // returns true if 'state' is a terminal state. 
+bool terminal(OthelloBoard state) { // returns true if 'state' is a terminal state. 
 	if(state::has_legal_moves_remaining(state::get_p1_symbol()) || state::has_legal_moves_remaining(state::get_p2_symbol())){
 		return false;
 	}
@@ -27,8 +27,8 @@ bool terminal(state) { // returns true if 'state' is a terminal state.
 	}
 }
 
-std::vector<OthelloBoard> successors(state) { // (AKA 'actions') needs to return an set of legal board states. There should already be a function for state legality.
-	// use to see if the move is legal: is_legal_move(int col, int row, char symbol)
+std::vector<OthelloBoard> successors(OthelloBoard state) { // (AKA 'actions') needs to return an set of legal board states. There should already be a function for state legality.
+
 	std::vector<OthelloBoard> validSuccessors;
 
 	for(int c = 0; c < state::get_num_cols(); c++){
@@ -43,13 +43,13 @@ std::vector<OthelloBoard> successors(state) { // (AKA 'actions') needs to return
 	}
 }
 
-int utility(state) { 
+int utility(OthelloBoard state) { 
 	int p1score = state::count_score(state::get_p1_symbol);
 	int p2score = state::count_score(state::get_p2_symbol);
 	return p1score - p2score; // the utility of a board state is the max players on board points subtract the min players on board points.
 }
 
-maxValue(state){
+int maxValue(OthelloBoard state){
 	if(terminal(state)){
 		return utility(state);
 	}
@@ -59,7 +59,7 @@ maxValue(state){
 	}
 }
 
-minValue(state){
+int minValue(OthelloBoard state){
 	if(terminal(state)){
 		return utility(state);
 	}
@@ -69,20 +69,11 @@ minValue(state){
 	}
 }
 
-minimax(state) {
+OthelloBoard minimax(OthelloBoard state) {
 
 	int value = maxValue(state);
-	return successors(state)<value>;
+	return successors(state)[value];
 
-	// if(terminal(state)){
-	// 	return utility(state);
-	// }
-	// else if(curr_player->get_symbol() == OthelloBoard::get_p1_symbol()){ // MAX player
-		
-	// }
-	// else if(curr_player->get_symbol() == OthelloBoard::get_p2_symbol()){ // MIN player
-	// 	// take the minimax of each child and return the largest.
-	// }
 }
 
 
