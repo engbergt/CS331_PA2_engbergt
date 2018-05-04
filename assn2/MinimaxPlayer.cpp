@@ -16,10 +16,10 @@
 
 /* Start: Tarren's functions */
 
-struct action = {
+struct action {
 	int column;
 	int row;
-	OthelloBoard resultantBoard;
+	OthelloBoard *resultantBoard;
 };
 
 
@@ -32,13 +32,13 @@ bool terminal(OthelloBoard *state) { // returns true if 'state' is a terminal st
 	}
 }
 
-std::vector<OthelloBoard> successors(OthelloBoard *state, char playerSymbol) { // (AKA 'actions') needs to return an set of legal board states. There should already be a function for state legality.
+std::vector<action> successors(OthelloBoard *state, char playerSymbol) { // (AKA 'actions') needs to return an set of legal board states. There should already be a function for state legality.
 
 	std::vector<action> validSuccessors;
 
 	for(int c = 0; c < state->get_num_cols(); c++){
 		for(int r = 0; c < state->get_num_rows(); r++){
-			if(state->is_cell_empty(c,r) && state->is_legal_move(c, r, playerSymbol)){
+			if(state->is_legal_move(c, r, playerSymbol)){
 				action tempAction;
 				tempAction.resultantBoard = state; // Clone the board ?? Ask Glen.
 				tempAction.resultantBoard->play_move(c, r, playerSymbol)
