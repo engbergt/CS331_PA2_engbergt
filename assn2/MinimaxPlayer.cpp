@@ -41,7 +41,7 @@ std::vector<action> successors(OthelloBoard *state, char playerSymbol) { // (AKA
 			if(state->is_legal_move(c, r, playerSymbol)){
 				action tempAction;
 				tempAction.resultantBoard = state; // Clone the board ?? Ask Glen.
-				tempAction.resultantBoard->play_move(c, r, playerSymbol)
+				tempAction.resultantBoard->play_move(c, r, playerSymbol);
 				tempAction.column = c;
 				tempAction.row = r;
 				validSuccessors.push_back(tempAction);
@@ -59,31 +59,43 @@ int utility(OthelloBoard *state) {
 	return p1score - p2score; // the utility of a board state is the max players on board points subtract the min players on board points.
 }
 
+
+
+// Minimax functions
+
 int maxValue(OthelloBoard *state){
 	if(terminal(state)){
 		return utility(state);
 	}
-	value = -INT16_MAX; // negative "infinity".
-	for(int& i: successors(state, state->get_p1_symbol())) { // I may have this player symbol backwards
-		value = std::max(value, minValue(state));
+
+	int value = -INT16_MAX; // negative "infinity".
+	std::vector<action> succs = successors(state, state->get_p1_symbol());
+
+	for(int i = 0; i < succs.size(); i++){
+		value = std::max(value, minValue(succs[i].resultantBoard));
 	}
+	return value;
 }
 
 int minValue(OthelloBoard *state){
 	if(terminal(state)){
 		return utility(state);
 	}
-	value = +INT16_MAX; // positive "infinity".
-	for(int& i: successors(state, state->get_p2_symbol())) { // I may have this player symbol backwards
-		value = std::min(value, minValue(state));
+	int value = +INT16_MAX; // positive "infinity".
+	std::vector<action> succs = successors(state, state->get_p2_symbol());
+
+	for(int i = 0; i < succs.size(); i++){
+		value = std::min(value, minValue(succs[i].resultantBoard));
 	}
+	return value;
 }
 
-OthelloBoard minimax(OthelloBoard *state) {
+action minimax(OthelloBoard *state) {
 
 	int value = maxValue(state);
-	successors(state)[value]; // not right.. we need to return an action.. ?
-	return 
+	std::vector<action> succs = successors(state, state->get_p2_symbol()); // not right.. we need to return an action.. ?
+	
+	return 0;
 }
 
 
@@ -104,10 +116,9 @@ MinimaxPlayer::~MinimaxPlayer() {
 void MinimaxPlayer::get_move(OthelloBoard* b, int& col, int& row) {
     // To be filled in by you
 
-	colAndRow = minimax(b)
-
-	colAndRow.col >> col;
-	colAndRow.row >> row;
+	action ourMove = minimax(b);
+	ourMove.column >> col;
+	ourMove.row >> row;
 }
 
 MinimaxPlayer* MinimaxPlayer::clone() {
